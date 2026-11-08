@@ -1,0 +1,20 @@
+{
+  "structures": 2000,
+  "unique_structures": 2000,
+  "unique_topologies": 100,
+  "parent_topologies": 177,
+  "valid_parent_pairs": 15723,
+  "topology_attempts": 500,
+  "selected_pairs": 100,
+  "variants_per_pair": 20,
+  "seed": 202611011,
+  "all_checks_passed": true,
+  "labels_included": false,
+  "pretrained_weights_used": false,
+  "seconds": 2.202,
+  "tested_versions": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "networkx": "3.7"
+  }
+}

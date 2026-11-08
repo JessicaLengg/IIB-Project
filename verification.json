@@ -1,0 +1,26 @@
+{
+  "status": "passed",
+  "generated_structures": 2000,
+  "unique_topologies": 100,
+  "unchanged_upstream_function_bodies": 12,
+  "prior_own_export_array_matches": {
+    "adjacency": true,
+    "raw_offsets": true,
+    "positions": true,
+    "offsets": true
+  },
+  "prior_author_dataset_match_claimed": false,
+  "trained_weights_loaded": false,
+  "FE_runs": 0,
+  "source_code_total_lines": 471,
+  "portable_run_outside_workspace": {
+    "status": "passed",
+    "structures": 12,
+    "seed": 202611015
+  },
+  "existing_output_protection": "passed",
+  "upstream_CSV_assets_bitwise_verified": 5,
+  "license_preserved": true,
+  "local_markdown_links_checked": 8,
+  "github_deployment_performed": false
+}
