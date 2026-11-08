@@ -25,3 +25,11 @@ The optional GitHub Pages Markdown configuration and its local image links are i
 The new datasets/own_10000 cohort contains 10,000 distinct full structures and 499 distinct topologies. All 10,000 FE labelling attempts passed. Sample IDs align across geometry, labels, split metadata and CSV. Effective matrices are symmetric positive definite; E22 values recomputed from saved matrices agree with the CSV. The saved random split is 8,000/1,000/1,000. No full input duplicates the earlier 2,000-row example. Dataset verification is saved alongside the arrays.
 
 The VAE class AST matches the upstream class definition. Twenty hard-decoding coordinate conversions agree with the upstream utilities; E22 gradients through soft decoder/encoder/predictor are finite and nonzero on three fixed nonzero latent probes. The exactly zero code in an untrained zero-bias ReLU network is stationary, so optimisation starts use encoder means rather than that artificial probe. Training and actual search results are recorded separately after execution.
+
+## Executed training and search
+
+The selected own-trained checkpoint was replayed on twelve preselected test inputs; predictions match saved outputs. Normalization exactly matches the 8,000 training rows; validation selects epoch 160. Mean-decoded test topology recovery is independently recounted as 1,000/1,000. Twelve reconstructed test geometries pass FE.
+
+Eight own-model latent searches yield five source-relative improvements, two degraded endpoints and one disconnected endpoint. The largest relative improvement (source 8222, +13.2978%) is replayed from its saved latent and FE-checked. The checkpoint hash is unchanged. Forty-six conservative post-training checks (45 actual solves, including verification) stay below the 64 cap. All table/plot outcomes, including failure, remain available.
+
+workflow.ipynb contains four actually executed inspection cells with no errors. It replays own weights and saved results without retraining or FE. The current README/page has no dataset-sufficiency discussion or GitHub-upload instructions. The source/data/metrics/own weights are committed together; large reproducible prediction caches and journals stay local.

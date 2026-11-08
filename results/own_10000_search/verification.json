@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "replayed_source_id": 8222,
+  "original_FE_E22": 0.04755560295132046,
+  "replayed_endpoint_FE_E22": 0.05387944629403352,
+  "gain_vs_original_percent": 13.297788168486392,
+  "saved_latent_to_geometry_exact": true,
+  "connection_pairs_changed": 0,
+  "optimisation_uses_own_frozen_checkpoint": true,
+  "additional_verification_FE_solves": 2,
+  "post_training_FE_budget_used_conservative": 46,
+  "post_training_FE_budget_cap": 64
+}

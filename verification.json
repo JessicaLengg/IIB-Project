@@ -26,5 +26,14 @@
     "github_deployment_performed": false
   },
   "own_10000_dataset": "datasets/own_10000/verification.json",
-  "own_scratch_training": "results/own_10000/verification.json"
+  "own_scratch_training": "results/own_10000/verification.json",
+  "own_model_search": "results/own_10000_search/verification.json",
+  "executed_notebook": {
+    "file": "workflow.ipynb",
+    "cells": 4,
+    "errors": 0,
+    "new_FE_solves": 0,
+    "new_training_runs": 0
+  },
+  "current_document_links_checked": 18
 }

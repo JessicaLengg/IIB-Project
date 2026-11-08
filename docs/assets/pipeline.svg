@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="150" viewBox="0 0 1080 150" role="img" aria-label="Own structures, finite elements, scratch training, evaluation and latent design">
+<rect width="1080" height="150" rx="14" fill="#f2f6f8"/>
+<rect x="14" y="28" width="200" height="88" rx="9" fill="white" stroke="#b7cbd5"/>
+<text x="114" y="61" font-family="Arial,sans-serif" font-size="16" font-weight="600" text-anchor="middle" fill="#194b64">Own structures</text>
+<text x="114" y="87" font-family="Arial,sans-serif" font-size="11" text-anchor="middle" fill="#4c6473">10,000 checked inputs</text>
+<path d="M215 69 L224 74 L215 79 Z" fill="#8da4af"/>
+<rect x="227" y="28" width="200" height="88" rx="9" fill="white" stroke="#b7cbd5"/>
+<text x="327" y="61" font-family="Arial,sans-serif" font-size="16" font-weight="600" text-anchor="middle" fill="#194b64">Finite elements</text>
+<text x="327" y="87" font-family="Arial,sans-serif" font-size="11" text-anchor="middle" fill="#4c6473">Actual stiffness labels</text>
+<path d="M428 69 L437 74 L428 79 Z" fill="#8da4af"/>
+<rect x="440" y="28" width="200" height="88" rx="9" fill="white" stroke="#b7cbd5"/>
+<text x="540" y="61" font-family="Arial,sans-serif" font-size="16" font-weight="600" text-anchor="middle" fill="#194b64">Scratch training</text>
+<text x="540" y="87" font-family="Arial,sans-serif" font-size="11" text-anchor="middle" fill="#4c6473">Own VAE + predictor</text>
+<path d="M641 69 L650 74 L641 79 Z" fill="#8da4af"/>
+<rect x="653" y="28" width="200" height="88" rx="9" fill="white" stroke="#b7cbd5"/>
+<text x="753" y="61" font-family="Arial,sans-serif" font-size="16" font-weight="600" text-anchor="middle" fill="#194b64">Evaluation</text>
+<text x="753" y="87" font-family="Arial,sans-serif" font-size="11" text-anchor="middle" fill="#4c6473">Reserved sample test</text>
+<path d="M854 69 L863 74 L854 79 Z" fill="#8da4af"/>
+<rect x="866" y="28" width="200" height="88" rx="9" fill="white" stroke="#b7cbd5"/>
+<text x="966" y="61" font-family="Arial,sans-serif" font-size="16" font-weight="600" text-anchor="middle" fill="#194b64">Latent design</text>
+<text x="966" y="87" font-family="Arial,sans-serif" font-size="11" text-anchor="middle" fill="#4c6473">Frozen model + FE checks</text>
+</svg>

@@ -1,0 +1,30 @@
+{
+  "status": "complete",
+  "starts": 8,
+  "valid_optimised_endpoints": 7,
+  "improved_vs_original": 5,
+  "new_FE_attempts": 32,
+  "earlier_reconstruction_FE_attempts": 12,
+  "post_training_FE_cap": 64,
+  "best_endpoint": {
+    "source_id": 9221,
+    "original_FE_E22": 0.051064030774977745,
+    "decoded_start_FE_E22": 0.050897379715514966,
+    "endpoint_FE_E22": 0.05398881328947843,
+    "random_FE_E22": 0.0514527253997114,
+    "selected_step": 400,
+    "valid_surrogate_evaluations": 401,
+    "stop_reason": "budget_completed",
+    "endpoint_status": "passed",
+    "gain_vs_original_percent": 5.727676546705118,
+    "gain_vs_decoded_start_percent": 6.073856043754455
+  },
+  "own_model_sha256": "b3a831c479f0df9f02988cacfb3facc76f8dcd474a5b645284f5c37f8198615f",
+  "weights_unchanged": true,
+  "stress_constraint_used": false,
+  "scope": "Own-trained frozen model; training-source starts; bounded local search, not a global optimum or speed benchmark.",
+  "new_FE_solver_calls": 31,
+  "additional_verification_FE_solves": 2,
+  "post_training_checks_including_replay": 46,
+  "post_training_actual_solver_calls_including_replay": 45
+}

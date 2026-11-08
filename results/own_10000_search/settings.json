@@ -1,0 +1,14 @@
+{
+  "starts": 8,
+  "max_steps": 400,
+  "learning_rate": 0.001,
+  "target_E22": 0.15,
+  "latent_trust_box_half_width": 0.5,
+  "seed": 20261108,
+  "FE_cap_including_reconstruction": 64,
+  "midpoint_FE_step": 200,
+  "weld_intersections": false,
+  "Es": 1.0,
+  "nu": 0.3,
+  "density": 0.15
+}

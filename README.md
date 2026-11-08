@@ -2,7 +2,7 @@
 
 A reproducible workflow for generating truss structures, calculating FE stiffness labels, training a joint VAE/predictor from scratch, and checking latent-space stiffness searches. Generation and the VAE architecture are adapted from [UnifyingTrussDesignSpace](https://github.com/li-zhengz/UnifyingTrussDesignSpace); the FE solver and compact experiment runners are independent implementations. No author checkpoint or published final structure dataset is required.
 
-![Generation workflow](docs/assets/workflow.svg)
+![Own-data workflow](docs/assets/pipeline.svg)
 
 ![Four generated octant examples](docs/assets/examples.png)
 
@@ -93,6 +93,28 @@ All test topologies occur in training; complete input geometries are distinct. T
 ![Own-data training results](results/own_10000/training_results.png)
 
 [Training report](results/own_10000/REPORT.md) · [Saved own-trained weights](results/own_10000/model.pt) · [Verification](results/own_10000/verification.json).
+
+## Own-model latent stiffness search
+
+The model above is frozen during search. Eight training-source topologies initialize bounded 48-dimensional latent searches; all endpoint comparisons use the same independent FE solver.
+
+| Outcome | Actual result |
+| --- | ---: |
+| FE-valid selected endpoints after latent updates | 7 / 8 |
+| Endpoints exceeding their own original FE source | 5 / 8 |
+| Largest relative source improvement | 13.30% |
+| Highest absolute endpoint E22 / Es | 0.0539888 |
+| Strongest original training source E22 / Es | 0.0582523 |
+
+The largest relative gain is source 8222: **0.0475556 → 0.0538794**, with unchanged connections and changed node positions. The highest absolute endpoint is a different source (9221), improving its own stiffness by 5.73%. The search does **not** exceed the strongest existing training design. Two endpoints degraded and one candidate was disconnected; those outcomes remain in the reports.
+
+![Latent search FE comparisons](results/own_10000_search/search_results.png)
+
+![Largest relative gain: source, decoded start and endpoint](results/own_10000_search/largest_relative_gain.png)
+
+The 10,000 dataset-label solves are an upfront cost. Post-training work used 12 reconstruction solves, 31 search solves and two final replay solves: 45 actual solves, within the conservative 64-check budget. One additional disconnected geometry was rejected before FE. A random displacement per source is a diagnostic, not a tuned benchmark. No stress constraint, global optimum or speed advantage is claimed.
+
+[Search report](results/own_10000_search/REPORT.md) · [All outcomes](results/own_10000_search/comparison.csv) · [Replay verification](results/own_10000_search/verification.json) · [Executed workflow notebook](workflow.ipynb).
 
 ## What was adapted?
 

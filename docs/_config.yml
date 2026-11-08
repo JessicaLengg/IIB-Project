@@ -1,4 +1,4 @@
-title: Truss Data Generation
-description: A small reproducible workflow adapted from the authors' public generation code.
+title: Own-data Truss Modelling
+description: Generated structures, independent FE, scratch VAE training and checked latent design.
 theme: jekyll-theme-minimal
 show_downloads: false
