@@ -1,0 +1,17 @@
+{
+  "seed": 20261108,
+  "epochs": 200,
+  "samples": {
+    "train": 8000,
+    "validation": 1000,
+    "test": 1000
+  },
+  "training_seconds": 203.87532558315434,
+  "pretrained_weights_used": false,
+  "dataset_sha256": "2652277774f7248f025573b8085201ed4383dac9e9c09e61967680df3f2c33e4",
+  "labels_sha256": "b18356d8ccf53c62e0b46f9bb3038b53329c59c7d3f27696161358bb268f93d4",
+  "test_selection": "not used for checkpoint/hyperparameter choice",
+  "architecture": "upstream VAE, own 48-128-128-9 head",
+  "sampler": "Original shared Gaussian scalar per sample; exp(logvar) scale and original KL retained.",
+  "checkpoint_selection": "validation exact recovery, wrong edges, offsets, normalized property error"
+}

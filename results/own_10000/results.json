@@ -1,0 +1,89 @@
+{
+  "status": "complete",
+  "selected_epoch": 160,
+  "metrics": [
+    {
+      "subset": "train",
+      "mode": "mean",
+      "n": 8000,
+      "exact_topologies": 8000,
+      "exact_fraction": 1.0,
+      "mean_wrong_edges": 0.0,
+      "matrix_accuracy": 1.0,
+      "offset_RMSE": 0.012519567273557186,
+      "C_RMSE": 0.0015966693474735894,
+      "C_normalized_MSE": 0.12324423406729385,
+      "valid_predicted_C": 7609
+    },
+    {
+      "subset": "validation",
+      "mode": "mean",
+      "n": 1000,
+      "exact_topologies": 1000,
+      "exact_fraction": 1.0,
+      "mean_wrong_edges": 0.0,
+      "matrix_accuracy": 1.0,
+      "offset_RMSE": 0.01668079011142254,
+      "C_RMSE": 0.001825213104524226,
+      "C_normalized_MSE": 0.16760877552640496,
+      "valid_predicted_C": 943
+    },
+    {
+      "subset": "test",
+      "mode": "mean",
+      "n": 1000,
+      "exact_topologies": 1000,
+      "exact_fraction": 1.0,
+      "mean_wrong_edges": 0.0,
+      "matrix_accuracy": 1.0,
+      "offset_RMSE": 0.017004908993840218,
+      "C_RMSE": 0.0018196900839773905,
+      "C_normalized_MSE": 0.16916154402124453,
+      "valid_predicted_C": 944
+    },
+    {
+      "subset": "train",
+      "mode": "native_sample",
+      "n": 8000,
+      "exact_topologies": 7997,
+      "exact_fraction": 0.999625,
+      "mean_wrong_edges": 0.000625,
+      "matrix_accuracy": 0.9999982853223593,
+      "offset_RMSE": 0.01277668122202158,
+      "C_RMSE": 0.0015966693474735894,
+      "C_normalized_MSE": 0.12324423406729385,
+      "valid_predicted_C": 7609
+    },
+    {
+      "subset": "validation",
+      "mode": "native_sample",
+      "n": 1000,
+      "exact_topologies": 999,
+      "exact_fraction": 0.999,
+      "mean_wrong_edges": 0.008,
+      "matrix_accuracy": 0.9999780521262003,
+      "offset_RMSE": 0.016964931041002274,
+      "C_RMSE": 0.001825213104524226,
+      "C_normalized_MSE": 0.16760877552640496,
+      "valid_predicted_C": 943
+    },
+    {
+      "subset": "test",
+      "mode": "native_sample",
+      "n": 1000,
+      "exact_topologies": 998,
+      "exact_fraction": 0.998,
+      "mean_wrong_edges": 0.005,
+      "matrix_accuracy": 0.9999862825788751,
+      "offset_RMSE": 0.01722857728600502,
+      "C_RMSE": 0.0018196900839773905,
+      "C_normalized_MSE": 0.16916154402124453,
+      "valid_predicted_C": 944
+    }
+  ],
+  "reconstruction_FE_checks": 12,
+  "reconstruction_FE_passed": 12,
+  "independent_test_used_for_selection": false,
+  "test_topologies": 438,
+  "test_rows_with_topology_in_training": 1000
+}

@@ -23,6 +23,10 @@ def main():
     args=parser.parse_args()
     if args.output.exists():raise FileExistsError('Preserve completed/partial search.')
     args.output.mkdir(parents=True);torch.set_num_threads(2);torch.manual_seed(20261108)
+    settings={'starts':8,'max_steps':400,'learning_rate':1e-3,'target_E22':.15,
+              'latent_trust_box_half_width':.5,'seed':20261108,'FE_cap_including_reconstruction':64,
+              'midpoint_FE_step':200,'weld_intersections':False,'Es':1.,'nu':.3,'density':.15}
+    (args.output/'settings.json').write_text(json.dumps(settings,indent=2)+'\n')
     data=load_data(args.dataset);vae,head,_=load_checkpoint(args.model)
     vae.requires_grad_(False);head.requires_grad_(False)
     weight_hash=hashlib.sha256((args.model/'model.pt').read_bytes()).hexdigest()
@@ -34,10 +38,10 @@ def main():
         if len(starts)==8:break
     (args.output/'starts.json').write_text(json.dumps(starts)+'\n')
     previous=json.loads((args.model/'results.json').read_text())['reconstruction_FE_checks']
-    fe_calls=0;cache={};physical=[];traces=[];summary=[];saved_candidates=[]
+    fe_calls=0;solver_calls=0;cache={};physical=[];traces=[];summary=[];saved_candidates=[]
 
     def check_fe(probability,offsets,source,kind,step):
-        nonlocal fe_calls
+        nonlocal fe_calls,solver_calls
         a,p=hard_geometry(probability,offsets);key=hashlib.sha256(a.tobytes()+p.tobytes()).hexdigest()
         row={'source_id':source,'kind':kind,'step':step,'status':'failed','reason':'','E22':None,'cached':key in cache}
         if key in cache:row.update(cache[key])
@@ -48,6 +52,7 @@ def main():
                 if not connected(a):raise ValueError('Decoded graph is not connected')
                 edges=np.column_stack(np.where(np.triu(a,1)))
                 if np.linalg.norm(p[edges[:,1]]-p[edges[:,0]],axis=1).min()<1e-8:raise ValueError('Degenerate decoded beam')
+                solver_calls+=1
                 c,info=homogenize(a,p,weld_intersections=False)
                 if info['minimum_stiffness_eigenvalue']<=1e-10:raise ValueError('Non-positive decoded FE stiffness')
                 row.update(status='passed',E22=float(1/np.linalg.inv(info['c_matrix'])[1,1]))
@@ -102,7 +107,8 @@ def main():
     improved=[r for r in eligible if r['gain_vs_original_percent']>0]
     assert hashlib.sha256((args.model/'model.pt').read_bytes()).hexdigest()==weight_hash
     result={'status':'complete','starts':len(starts),'valid_optimised_endpoints':len(eligible),'improved_vs_original':len(improved),
-            'new_FE_attempts':fe_calls,'earlier_reconstruction_FE_attempts':previous,'post_training_FE_cap':64,
+            'new_FE_attempts':fe_calls,'new_FE_solver_calls':solver_calls,
+            'earlier_reconstruction_FE_attempts':previous,'post_training_FE_cap':64,
             'best_endpoint':max(eligible,key=lambda r:r['endpoint_FE_E22']) if eligible else None,
             'own_model_sha256':weight_hash,'weights_unchanged':True,'stress_constraint_used':False,
             'scope':'Own-trained frozen model; training-source starts; bounded local search, not a global optimum or speed benchmark.'}
@@ -122,6 +128,9 @@ def main():
     for shift,key,title in [(-1,'original_FE_E22','Original source'),(0,'decoded_start_FE_E22','Decoded start'),(1,'endpoint_FE_E22','Surrogate-selected endpoint')]:
         ax.bar(k+shift*width,[r[key] if r[key] is not None else np.nan for r in summary],width,label=title)
     ax.set(xticks=k,xticklabels=[str(r['source_id']) for r in summary],xlabel='Own training source ID',ylabel='Actual FE E22 / Es')
+    for j,row in enumerate(summary):
+        if row['endpoint_FE_E22'] is None:
+            ax.text(j, max(row['original_FE_E22'],row['decoded_start_FE_E22'] or 0)+.002,'Invalid graph',ha='center',fontsize=8)
     ax.legend(fontsize=8);fig.savefig(args.output/'search_results.png',dpi=170);plt.close(fig)
     print(json.dumps(result,indent=2),flush=True)
 

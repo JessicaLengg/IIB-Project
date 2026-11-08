@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "normalization": "reproduced exactly from 8000 training rows",
+  "validation_selected_epoch": 160,
+  "selected_checkpoint_replay_cases": 12,
+  "replayed_arrays": [
+    "adjacency_probability",
+    "offset_prediction",
+    "stiffness_prediction",
+    "mean"
+  ],
+  "test_exact_topology_count_recomputed": 1000,
+  "test_used_to_choose_epoch": false,
+  "own_checkpoint_sha256": "b3a831c479f0df9f02988cacfb3facc76f8dcd474a5b645284f5c37f8198615f"
+}

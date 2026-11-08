@@ -74,6 +74,26 @@ Training starts from random weights. The 48-dimensional VAE is jointly fitted wi
 
 Latent search freezes these own-trained weights. Only the latent variables change. Eight source topologies, fixed settings, a trust box and a post-training FE budget are specified before search. Predicted improvement is checked against actual FE, and gains are measured against both the original structure and its decoded starting reconstruction. A fixed target E22=.15 is a search reference, not an attained-performance claim. Non-positive predicted stiffness, failed FE and non-improving results remain visible.
 
+## Reference reconstruction result
+
+The 10,000-row own-data run used 8,000 training, 1,000 validation and 1,000 test examples. A single scratch fit ran for 200 epochs; validation selected epoch 160.
+
+| Test metric | Actual result |
+| --- | ---: |
+| Exact topology, encoder-mean decoding | 1,000 / 1,000 |
+| Exact topology, one native sampled decoding | 998 / 1,000 |
+| Full adjacency accuracy, native sampled decoding | 99.9986% |
+| C22 prediction R2 | 0.8932 |
+| Positive-definite predicted stiffness matrices | 944 / 1,000 |
+| Prespecified reconstructed test structures passing FE | 12 / 12 |
+| Median absolute E22 change in those twelve reconstructions | 0.545% |
+
+All test topologies occur in training; complete input geometries are distinct. This is random sample evaluation, not unseen-topology generalization. Coordinates are approximate and stiffness predictions can be non-physical; connection recovery alone does not establish mechanical accuracy.
+
+![Own-data training results](results/own_10000/training_results.png)
+
+[Training report](results/own_10000/REPORT.md) · [Saved own-trained weights](results/own_10000/model.pt) · [Verification](results/own_10000/verification.json).
+
 ## What was adapted?
 
 This is a **code-derived, smaller-scale generation workflow**, not a recreation of the authors' complete historical dataset.
