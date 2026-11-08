@@ -24,8 +24,18 @@ The release's parent-pair validity loop assigns both indices from `all_combinati
 
 Geometry is independently perturbed after pair superposition. The exported Cartesian coordinates and natural-offset components undergo the same global x/y exchange used in our prior ML dataset. Both coordinate conversion and parent unions are checked for every exported row.
 
-The runner does not read the authors' final dataset or any neural-network weights. It does not use reconstruction scores to reject samples. It does not run FE, generate stiffness labels, weld beam-interior intersections, filter by stiffness, or impose an extra maximum perturbed-beam-length rule.
+Duplicate complete geometry draws are now resampled before export, with at most 100 attempts per row and an explicit counter; the new 10,000-row run resampled one duplicate. This is an orchestration adaptation, not a modification of the upstream functions.
+
+The generator does not read the authors' final dataset or any neural-network weights. It does not use reconstruction scores to reject samples. The generation runner does not run FE, generate stiffness labels, weld beam-interior intersections, filter by stiffness, or impose an extra maximum perturbed-beam-length rule. FE labelling is a separate stage.
 
 ## Scope
 
 New sample instances are generated from the authors' elementary seed graphs and adapted public-code workflow. This is not a new generation algorithm and does not claim exact historical dataset reproduction. The paper's prose and the public code differ in some ordering and intersection details; those differences remain explicit rather than being combined silently.
+
+## Own-data modelling extension
+
+models.py retains the original vaeModel class AST body from models/model.py, with fixed 378/27 input sizes and 48 latent components. It instantiates fresh weights without reading an upstream checkpoint. The small PropertyHead and joint training recipe are our adaptation, not the original paper's exact training configuration. The original sampler uses exp(logvar) and a shared scalar Gaussian per example, while the KL retains the source formula; that convention is not silently changed.
+
+fe.py is our independent Python periodic Timoshenko solver. Its default is explicit graph joints (no automatic intersection welding), Es=1, nu=.3, density=.15. The general intersection helper is retained, but all reference commands explicitly use the graph convention. This is not copied ae108 study code.
+
+The 10,000-row run uses a fresh seed, 1,500 topology attempts, 500 selected pairs and twenty variations per pair. It contains 499 distinct final topologies and no exact full-structure overlap with the earlier 2,000-row cohort. Dataset labels, train/validation/test membership and sample IDs are saved separately.

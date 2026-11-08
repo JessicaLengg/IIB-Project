@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "row_alignment": "sample IDs match structures/labels/splits/CSV",
+  "FE_passed": 10000,
+  "split_counts": {
+    "train": 8000,
+    "validation": 1000,
+    "test": 1000
+  },
+  "symmetric_positive_definite_C": true,
+  "CSV_E22_recomputed_from_full_C": true,
+  "max_equilibrium_residual": 4.83551696856701e-13,
+  "upstream_model_AST_retained": true,
+  "native_geometry_checks": 20,
+  "pretrained_weights_used": false
+}

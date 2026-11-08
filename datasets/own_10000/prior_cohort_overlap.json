@@ -1,0 +1,9 @@
+{
+  "exact_full_structure_overlap_with_prior_2000": 0,
+  "overlap_by_partition": {
+    "train": 0,
+    "validation": 0,
+    "test": 0
+  },
+  "matching_sample_ids": []
+}

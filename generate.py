@@ -64,13 +64,22 @@ def generate(parents, pairs, variants, seed):
     np.random.seed(seed + 1); random.seed(seed + 1)
     chosen = np.asarray(valid)[np.random.choice(len(valid), pairs, replace=False)]
     adjacency, offsets, positions = [], [], []
+    seen, duplicate_draws = set(), 0
     for i, j in chosen:
         union = parents[i] | parents[j]
         for _ in range(variants):
-            offset = up.ptbNodes(union)
+            for attempt in range(100):
+                offset = up.ptbNodes(union)
+                key = hashlib.sha256(union.tobytes() + offset[:, AXES].tobytes()).hexdigest()
+                if key not in seen:
+                    seen.add(key)
+                    break
+                duplicate_draws += 1
+            else:
+                raise ValueError('Repeated geometry draws exhausted; reduce variants or change the seed.')
             points = up.nodesInit.copy() if not offset.any() else up.ptb2nodes(offset)
             adjacency.append(union.copy()); offsets.append(offset[:, AXES]); positions.append(points[:, AXES])
-    return np.asarray(adjacency), np.asarray(offsets), np.asarray(positions), chosen, len(valid)
+    return np.asarray(adjacency), np.asarray(offsets), np.asarray(positions), chosen, len(valid), duplicate_draws
 
 
 def check(adjacency, offsets, positions, chosen, parents, variants):
@@ -107,7 +116,7 @@ def main():
     if args.output.exists(): parser.error('Output exists; use a fresh --output folder.')
     started = time.perf_counter()
     parents, parent_ids, families, raw = parent_library(args.attempts, args.seed)
-    a, x, p, chosen, valid_pairs = generate(parents, args.pairs, args.variants, args.seed)
+    a, x, p, chosen, valid_pairs, duplicate_draws = generate(parents, args.pairs, args.variants, args.seed)
     rows = check(a, x, p, chosen, parents, args.variants)
     reference = up.nodesInit[:, AXES]; args.output.mkdir(parents=True)
     np.savez_compressed(args.output / 'structures.npz', adjacency=a, raw_offsets=x, positions=p,
@@ -117,10 +126,11 @@ def main():
     np.savez_compressed(args.output / 'raw_attempts.npz', adjacency=raw)
     np.savetxt(args.output / 'selected_pairs.csv', chosen, delimiter=',', fmt='%d', header='parent1,parent2', comments='')
     with (args.output / 'provenance.csv').open('w', newline='') as stream:
-        writer = csv.DictWriter(stream, fieldnames=rows[0]); writer.writeheader(); writer.writerows(rows)
+        writer = csv.DictWriter(stream, fieldnames=rows[0], lineterminator="\n"); writer.writeheader(); writer.writerows(rows)
     summary = dict(structures=len(a), unique_structures=len(rows), unique_topologies=len({r['topology_key'] for r in rows}),
                    parent_topologies=len(parents), valid_parent_pairs=valid_pairs, topology_attempts=args.attempts,
                    selected_pairs=args.pairs, variants_per_pair=args.variants, seed=args.seed,
+                   duplicate_geometry_draws_resampled=duplicate_draws,
                    all_checks_passed=True, labels_included=False, pretrained_weights_used=False,
                    seconds=round(time.perf_counter() - started, 3),
                    tested_versions={name: version(name) for name in ['numpy', 'scipy', 'networkx']})

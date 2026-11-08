@@ -1,0 +1,18 @@
+{
+  "structures": 10000,
+  "passed": 10000,
+  "failed": 0,
+  "analytic_checks": {
+    "cantilever_axial_bending_torsion": true,
+    "beam_rigid_modes": true,
+    "periodic_cubic_axial_stiffness": true,
+    "uniform_modulus_scaling": true
+  },
+  "weld_intersections": false,
+  "Es": 1.0,
+  "nu": 0.3,
+  "density": 0.15,
+  "seconds": 256.8073935410939,
+  "generation_sha256": "2652277774f7248f025573b8085201ed4383dac9e9c09e61967680df3f2c33e4",
+  "solver_sha256": "be78281a9e0fb0111a52b0b9f1706c8a9742602ea397ff367ba45c83afb5074a"
+}

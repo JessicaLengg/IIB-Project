@@ -1,4 +1,4 @@
-# Verification of the upload bundle
+# Verification
 
 Verified locally on 8 November 2026.
 
@@ -19,3 +19,9 @@ Verified locally on 8 November 2026.
 These are generation, provenance and portability checks. Graph/geometry acceptance does not prove FE stability, physical strength, manufacturability, or neural reconstruction performance. Intersecting beam interiors remain separate unless the explicit graph supplies a joint. Very short or long nonzero beams are not silently removed by an additional manufacturing rule.
 
 The optional GitHub Pages Markdown configuration and its local image links are included. Deployment to GitHub and the final hosted theme rendering have not been performed here.
+
+## Own-data reference pipeline
+
+The new datasets/own_10000 cohort contains 10,000 distinct full structures and 499 distinct topologies. All 10,000 FE labelling attempts passed. Sample IDs align across geometry, labels, split metadata and CSV. Effective matrices are symmetric positive definite; E22 values recomputed from saved matrices agree with the CSV. The saved random split is 8,000/1,000/1,000. No full input duplicates the earlier 2,000-row example. Dataset verification is saved alongside the arrays.
+
+The VAE class AST matches the upstream class definition. Twenty hard-decoding coordinate conversions agree with the upstream utilities; E22 gradients through soft decoder/encoder/predictor are finite and nonzero on three fixed nonzero latent probes. The exactly zero code in an untrained zero-bias ReLU network is stationary, so optimisation starts use encoder means rather than that artificial probe. Training and actual search results are recorded separately after execution.

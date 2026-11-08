@@ -1,6 +1,6 @@
-# Truss Data Generation
+# Own-data Truss Modelling and Latent Design
 
-A small, reproducible **data-generation-only** workflow adapted from Zheng et al.'s public [UnifyingTrussDesignSpace code](https://github.com/li-zhengz/UnifyingTrussDesignSpace). It generates new octant graphs and constrained node positions from elementary lattice seeds. No published final dataset, pretrained weights, PyTorch or network access is needed to run it.
+A reproducible workflow for generating truss structures, calculating FE stiffness labels, training a joint VAE/predictor from scratch, and checking latent-space stiffness searches. Generation and the VAE architecture are adapted from [UnifyingTrussDesignSpace](https://github.com/li-zhengz/UnifyingTrussDesignSpace); the FE solver and compact experiment runners are independent implementations. No author checkpoint or published final structure dataset is required.
 
 ![Generation workflow](docs/assets/workflow.svg)
 
@@ -13,9 +13,13 @@ A small, reproducible **data-generation-only** workflow adapted from Zheng et al
 - `data/`: the four upstream elementary adjacency graphs and the 27 reference-node coordinates.
 - `preview.py`: a small plotting helper.
 - `example_data/`: an actually generated, checked 2,000-structure example with provenance.
-- `docs/`: a GitHub Pages landing page for this generation workflow.
+- `fe.py`, `label.py`: independent periodic Timoshenko FE and batch labelling.
+- `models.py`, `train.py`, `evaluate.py`: upstream VAE architecture, own stiffness head, scratch training and evaluation.
+- `optimise.py`: bounded latent E22 search using the frozen own-trained model, followed by actual FE checks.
+- `datasets/own_10000/`: 10,000 checked own structures, FE labels, fixed splits and provenance.
+- `docs/`: project landing page.
 
-FE labels, model training, checkpoint comparisons and latent optimisation are outside this package. The example contains **geometry and connectivity, not stiffness labels**.
+The original `example_data/` remains a geometry-only 2,000-structure example. The new reference dataset has **10,000 distinct structures across 499 final topologies**, with actual FE labels for every row. See [EXPERIMENT.md](EXPERIMENT.md) for the fixed training and search protocol.
 
 ## Quick start
 
@@ -25,11 +29,13 @@ Use Python 3.10 or newer, then run from this folder:
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
-python generate.py --output generated
-python preview.py generated/structures.npz --output examples.png
+python generate.py --attempts 1500 --pairs 500 --variants 20 --seed 202611081 --output generated_10000
+python label.py generated_10000/structures.npz
+python train.py generated_10000 --output results/new_fit
+python optimise.py generated_10000 results/new_fit --output results/new_search
 ```
 
-The defaults request 500 topology attempts, 100 selected parent pairs and 20 independent geometry draws per pair. The supplied example has **2,000 distinct structures, 100 distinct final topologies and 177 retained parent topologies**. A new output path is required; existing results are never overwritten.
+The commands reproduce the 10,000-row reference configuration. Plain `python generate.py` retains the smaller 2,000-row generation defaults. Existing output folders and labels are preserved; choose fresh paths for an independent run. `preview.py` draws generated octant graphs.
 
 The dependency versions used to verify the supplied example are in `requirements-tested.txt`.
 
@@ -39,7 +45,7 @@ The dependency versions used to verify the supplied example are in `requirements
 2. Apply the upstream stochastic topology changes and repair rules. Retain connected parent graphs meeting the upstream boundary check, then remove duplicate topologies.
 3. Enumerate unordered parent pairs, allowing self-pairs. Check the connectivity of the union of **both** parents and sample valid pairs without replacement.
 4. Combine the two parent adjacencies with Boolean OR. For each selected pair, call the upstream node-perturbation function independently 20 times.
-5. Verify connectivity of active nodes, boundary spanning, union provenance, unique complete structures, allowed offset directions, coordinate bounds and nonzero beam lengths. Save the arrays, seeds, parent IDs and per-sample checks.
+5. Resample duplicate complete geometry draws, with a bounded retry count and a recorded duplicate counter. Verify connectivity of active nodes, boundary spanning, union provenance, unique complete structures, allowed offset directions, coordinate bounds and nonzero beam lengths. Save the arrays, seeds, parent IDs and per-sample checks.
 
 Vertex positions are fixed. Edge nodes move only along their edge, face nodes within their face, and the body node in three dimensions. The representation keeps 27 candidate slots; inactive slots are not connected graph nodes. This exports the **octant**, not an already mirrored full-cell FE mesh. Beam interiors do not become joints merely by crossing.
 
@@ -57,6 +63,16 @@ with np.load("example_data/structures.npz") as data:
 `raw_offsets` stores `(N, 27, 3)` natural offsets; these are **not generally Cartesian displacements**. `reference_positions` stores the reference arrangement. The export applies one explicit global x/y exchange to both coordinates and offset components, matching our existing ML exports. It does not alter adjacency, lengths or connectivity. `generate.check` verifies the coordinate conversion using the inverse exchange and the original upstream mapping.
 
 `parents.npz`, `raw_attempts.npz`, `selected_pairs.csv` and `provenance.csv` retain the generation history. `summary.json` reports actual unique counts, rather than assuming every selected pair produces a new topology.
+
+## FE, training and search
+
+FE uses circular linear Timoshenko beams, six periodic engineering-strain cases, Es=1, nu=.3 and relative density .15. Explicit graph joints are preserved. Each label has nine orthotropic stiffness components, a 6-by-6 matrix, a source ID and a validity flag. The independent solver is not the authors' original ae108 study implementation.
+
+The new random sample split is fixed at 8,000 training, 1,000 validation and 1,000 test rows, seed 20261108. Normalization uses training labels only. Validation selects a checkpoint; the test partition does not tune the model. Topology overlap is measured and reported rather than prohibited.
+
+Training starts from random weights. The 48-dimensional VAE is jointly fitted with a 48–128–128–9 property head. Evaluation separates full-matrix accuracy, complete topology recovery, coordinate error, stiffness error and actual FE checks of reconstructed structures. The native upstream shared-noise sampler and its logvar/KL convention are retained and documented.
+
+Latent search freezes these own-trained weights. Only the latent variables change. Eight source topologies, fixed settings, a trust box and a post-training FE budget are specified before search. Predicted improvement is checked against actual FE, and gains are measured against both the original structure and its decoded starting reconstruction. A fixed target E22=.15 is a search reference, not an attained-performance claim. Non-positive predicted stiffness, failed FE and non-improving results remain visible.
 
 ## What was adapted?
 
